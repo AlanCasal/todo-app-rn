@@ -30,7 +30,16 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
 *.tsbuildinfo
+
+expo-env.d.ts
+# @end expo-cli
+
+# custom
+todo-app.code-workspace
+challenge.js
+# .husky/
