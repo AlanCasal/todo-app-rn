@@ -40,6 +40,6 @@ export default StyleSheet.create({
 	todoActionsContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		gap: wp(5),
+		gap: 20,
 	},
 });

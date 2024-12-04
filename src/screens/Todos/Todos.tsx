@@ -6,6 +6,7 @@ import styles from './styles';
 import Header from '@/src/components/Header';
 import CustomTextInput from '@/src/components/CustomTextInput';
 import TodoList from '@/src/components/TodoList';
+import { AxiosError } from 'axios';
 
 const TodosList = () => {
 	const [todos, setTodos] = useState<Todo[]>([]);
@@ -13,11 +14,13 @@ const TodosList = () => {
 
 	const handleFetchTodos = useCallback(async () => {
 		try {
-			const todosList = await fetchTodos();
+			const todosList = (await fetchTodos()) || [];
 
 			setTodos(todosList);
 		} catch (err) {
-			Alert.alert('Error', err as string);
+			let errorMessage = 'An unexpected error occurred';
+			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			Alert.alert('Error', errorMessage);
 		}
 	}, []);
 
@@ -35,7 +38,9 @@ const TodosList = () => {
 
 			setTodos(updatedTodos);
 		} catch (err) {
-			Alert.alert('Error', err as string);
+			let errorMessage = 'An unexpected error occurred';
+			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			Alert.alert('Error', errorMessage);
 		}
 	};
 
@@ -48,7 +53,9 @@ const TodosList = () => {
 			setTodos([...todos, { title: messageBody, completed: 0, id }]);
 			setMessageBody('');
 		} catch (err) {
-			Alert.alert('Error', err as string);
+			let errorMessage = 'An unexpected error occurred';
+			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			Alert.alert('Error', errorMessage);
 		} finally {
 			Keyboard.dismiss();
 		}
@@ -60,7 +67,9 @@ const TodosList = () => {
 			const updatedTodos = todos.filter(todo => todo.id !== id);
 			setTodos(updatedTodos);
 		} catch (err) {
-			Alert.alert('Error', err as string);
+			let errorMessage = 'An unexpected error occurred';
+			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			Alert.alert('Error', errorMessage);
 		}
 	};
 

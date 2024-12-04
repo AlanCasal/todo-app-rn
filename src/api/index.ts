@@ -1,20 +1,11 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../utils/constants';
-import { Alert } from 'react-native';
 import { Todo } from '../utils/types';
 
 const api = {
 	get: async (url: string) => {
 		const sessionToken = await AsyncStorage.getItem('sessionToken');
-
-		if (!sessionToken) {
-			Alert.alert(
-				'Error',
-				'No session token found. Please close the app and try again.'
-			);
-			return;
-		}
 
 		const response = await axios.get(url, {
 			headers: { Authorization: sessionToken },

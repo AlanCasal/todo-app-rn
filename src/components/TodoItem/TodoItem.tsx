@@ -42,7 +42,9 @@ const TodoItem = ({
 				</Text>
 			</View>
 			<View style={styles.todoActionsContainer}>
-				<Feather name="edit-3" size={18} color={colors.lightGray3} />
+				<View>
+					<Feather name="edit-3" size={18} color={colors.lightGray3} />
+				</View>
 				<TouchableOpacity onPress={() => handleDeleteTodo(todo.id)}>
 					<Ionicons name="trash-bin" size={18} color={colors.red} />
 				</TouchableOpacity>

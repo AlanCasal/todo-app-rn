@@ -1,79 +1,76 @@
+/* eslint-disable indent */
 /* eslint-disable no-console */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Slot, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import { startSession, validateSession } from '@/src/api';
 import { StatusBar } from 'expo-status-bar';
-import { AxiosError, isAxiosError } from 'axios';
+import { AxiosError } from 'axios';
+
+// Define a type for the error response data
+type ErrorResponseData = {
+	message?: string;
+};
 
 const RootLayout = () => {
+	const [isSessionInitialized, setIsSessionInitialized] = useState(false);
 	const router = useRouter();
 
-	const handleValidateSession = async () => {
+	const handleStartSession = useCallback(async () => {
+		const response = await startSession();
+
+		await AsyncStorage.setItem('sessionToken', response.token);
+
+		setIsSessionInitialized(true);
+	}, []);
+
+	const handleValidateSession = useCallback(async () => {
 		const token = await AsyncStorage.getItem('sessionToken');
-		if (!token) return false;
+		if (!token) handleStartSession();
 
-		const response = await validateSession();
+		await validateSession();
 
-		switch (response?.status) {
-			case 200:
-				return token;
-			case 401:
-			default:
-				await AsyncStorage.removeItem('sessionToken');
-				return false;
-		}
-	};
+		setIsSessionInitialized(true);
+	}, [handleStartSession]);
 
-	const handleError = (err: unknown) => {
-		const defaultError = {
-			title: 'Error',
-			message: 'Session initialization failed. Please try again.',
-		};
+	const handleError = useCallback(
+		async (err: AxiosError<ErrorResponseData>) => {
+			const defaultErrorMessage =
+				'Session initialization failed. Please try again.';
 
-		if (!isAxiosError(err)) {
-			console.log('[axios error]');
-			Alert.alert(defaultError.title, defaultError.message);
-			return;
-		}
+			if (err.response?.status === 401) {
+				const token = await AsyncStorage.getItem('sessionToken');
+				if (token) await AsyncStorage.removeItem('sessionToken');
 
-		const errorDetails = {
-			title: `Error ${err.response?.status || ''}`.trim(),
-			message: err.response?.data?.message || defaultError.message,
-		};
+				handleStartSession();
+			}
 
-		console.log('[error!!!]', err as AxiosError);
+			const errorDetails = {
+				title: `Error ${err.response?.status || ''}`.trim(),
+				message: err.response?.data?.message || defaultErrorMessage,
+			};
 
-		Alert.alert(errorDetails.title, errorDetails.message);
-	};
+			Alert.alert(errorDetails.title, errorDetails.message);
+		},
+		[handleStartSession]
+	);
 
 	const initializeSession = useCallback(async () => {
 		try {
-			let token = await handleValidateSession();
-			const os = Platform.OS;
-			console.log(`[${os} token]`, token);
-
-			if (!token) {
-				const response = await startSession();
-				console.log(
-					'%c[response]',
-					'background: #003300; color: #b7ffb7',
-					response
-				);
-				token = response.token as string;
-				await AsyncStorage.setItem('sessionToken', token);
-			}
-
-			router.replace('/todos');
+			await handleValidateSession();
 		} catch (err) {
-			handleError(err);
+			handleError(err as AxiosError<ErrorResponseData>);
 		}
-	}, [router]);
+	}, [handleError, handleValidateSession]);
 
 	useEffect(() => {
 		initializeSession();
 	}, [initializeSession]);
+
+	useEffect(() => {
+		if (isSessionInitialized) router.replace('/todos');
+	}, [isSessionInitialized, router]);
 
 	return (
 		<>
