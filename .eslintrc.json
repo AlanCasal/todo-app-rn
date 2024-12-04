@@ -63,6 +63,20 @@
 				"singleQuote": true
 			}
 		],
+		"import/order": [
+			"error",
+			{
+				"groups": [
+					"builtin",
+					"external",
+					"internal",
+					"parent",
+					"sibling",
+					"index"
+				],
+				"alphabetize": { "order": "asc" }
+			}
+		],
 		"react/display-name": "off",
 		"react/jsx-boolean-value": "off",
 		"react/jsx-closing-bracket-location": "off",

@@ -1,12 +1,14 @@
-import { View, Text, FlatList } from 'react-native';
-import React from 'react';
-import styles from './styles';
 import { FontAwesome5 } from '@expo/vector-icons';
-import colors from '@/src/utils/colors';
-import { Todo } from '@/src/utils/types';
+import React from 'react';
+import { View, Text, FlatList } from 'react-native';
 import TodoItem from '../TodoItem';
-import { LARGE_FONT_SIZE } from '@/src/utils/constants';
-import { sharedStyles } from '@/src/utils/sharedStyles';
+import styles from './styles';
+import {
+	sharedStyles,
+	COLORS,
+	LARGE_FONT_SIZE,
+} from '@/src/utils/sharedStyles';
+import { Todo } from '@/src/utils/types';
 
 type Props = {
 	todos: Todo[];
@@ -35,7 +37,7 @@ const TodoList = ({ todos, handleToggleTodo, handleDeleteTodo }: Props) => {
 					<FontAwesome5
 						name="pen"
 						size={LARGE_FONT_SIZE}
-						color={colors.lightGray4}
+						color={COLORS.lightGray4}
 					/>
 				</View>
 			) : (

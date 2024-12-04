@@ -1,3 +1,4 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import {
 	TouchableOpacity,
@@ -7,11 +8,9 @@ import {
 	KeyboardAvoidingViewProps,
 	View,
 } from 'react-native';
-import colors from '@/src/utils/colors';
 import styles from './styles';
-import { Feather } from '@expo/vector-icons';
-import { IS_IOS } from '@/src/utils/constants';
-import { sharedStyles } from '@/src/utils/sharedStyles';
+import { IS_IOS } from '@/src/utils';
+import { sharedStyles, COLORS } from '@/src/utils/sharedStyles';
 
 type Props = {
 	messageBody: string;
@@ -51,7 +50,7 @@ const CustomTextInput = ({
 					style={styles.input}
 					// eslint-disable-next-line prettier/prettier
 					placeholder="Write something..."
-					placeholderTextColor={colors.lightGray4}
+					placeholderTextColor={COLORS.lightGray4}
 					onChangeText={setMessageBody}
 					defaultValue={messageBody}
 				/>
@@ -59,14 +58,14 @@ const CustomTextInput = ({
 					style={{
 						...styles.addTodo,
 						...(!messageBody.trim().length && {
-							backgroundColor: colors.lightGray3,
+							backgroundColor: COLORS.lightGray3,
 						}),
 					}}
 					onPress={handleAddTodo}
 					disabled={!messageBody.trim().length}
 				>
 					{/* eslint-disable-next-line prettier/prettier */}
-					<Feather name="plus" size={18} color={colors.white} />
+					<Feather name="plus" size={18} color={COLORS.white} />
 				</TouchableOpacity>
 			</View>
 		</KeyboardAvoidingView>

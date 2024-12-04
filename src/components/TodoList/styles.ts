@@ -1,10 +1,9 @@
-import colors from '@/src/utils/colors';
 import { StyleSheet } from 'react-native';
-import { LARGE_FONT_SIZE } from '@/src/utils/constants';
 import {
 	widthPercentageToDP as wp,
 	heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { LARGE_FONT_SIZE, COLORS } from '@/src/utils/sharedStyles';
 
 export default StyleSheet.create({
 	listContainer: {
@@ -19,7 +18,7 @@ export default StyleSheet.create({
 	},
 	noTodosText: {
 		fontSize: LARGE_FONT_SIZE,
-		color: colors.lightGray4,
+		color: COLORS.lightGray4,
 	},
 	listContentContainer: {
 		paddingVertical: hp(1.5),

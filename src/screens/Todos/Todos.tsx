@@ -14,12 +14,14 @@ const TodosList = () => {
 
 	const handleFetchTodos = useCallback(async () => {
 		try {
-			const todosList = (await fetchTodos()) || [];
+			const todosList = await fetchTodos();
 
-			setTodos(todosList);
+			setTodos(todosList.data);
 		} catch (err) {
 			let errorMessage = 'An unexpected error occurred';
-			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			if (err instanceof AxiosError && err.response?.data.message)
+				errorMessage = err.response?.data.message;
+
 			Alert.alert('Error', errorMessage);
 		}
 	}, []);

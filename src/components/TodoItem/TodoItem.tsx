@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
-import colors from '@/src/utils/colors';
+import { COLORS } from '@/src/utils/sharedStyles';
 import { Todo } from '@/src/utils/types';
 
 type Props = {
@@ -29,7 +29,7 @@ const TodoItem = ({
 					<Feather
 						name={todo.completed ? 'check-square' : 'square'}
 						size={18}
-						color={todo.completed ? colors.primaryBlue : colors.lightGray3}
+						color={todo.completed ? COLORS.primaryBlue : COLORS.lightGray3}
 					/>
 				</TouchableOpacity>
 				<Text
@@ -43,10 +43,10 @@ const TodoItem = ({
 			</View>
 			<View style={styles.todoActionsContainer}>
 				<View>
-					<Feather name="edit-3" size={18} color={colors.lightGray3} />
+					<Feather name="edit-3" size={18} color={COLORS.lightGray3} />
 				</View>
 				<TouchableOpacity onPress={() => handleDeleteTodo(todo.id)}>
-					<Ionicons name="trash-bin" size={18} color={colors.red} />
+					<Ionicons name="trash-bin" size={18} color={COLORS.red} />
 				</TouchableOpacity>
 			</View>
 		</View>

@@ -1,29 +1,33 @@
-import colors from '@/src/utils/colors';
 import { StyleSheet } from 'react-native';
-import {
-	NORMAL_FONT_SIZE,
-	SMALL_FONT_SIZE,
-	LARGE_FONT_SIZE,
-	IS_WEB,
-} from '@/src/utils/constants';
 import {
 	widthPercentageToDP as wp,
 	heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { IS_WEB } from '@/src/utils';
+import {
+	COLORS,
+	NORMAL_FONT_SIZE,
+	SMALL_FONT_SIZE,
+	LARGE_FONT_SIZE,
+	SHADOW_COLOR,
+	SHADOW_OPACITY,
+	SHADOW_RADIUS,
+	SHADOW_WIDTH,
+} from '@/src/utils/sharedStyles';
 
 export default StyleSheet.create({
 	header: {
 		paddingBottom: hp(2),
 		marginTop: IS_WEB ? hp(2) : 0,
 		borderBottomWidth: 3,
-		borderBottomColor: colors.primaryBlue,
+		borderBottomColor: COLORS.primaryBlue,
 	},
 	headerShadow: {
-		backgroundColor: 'white',
-		shadowColor: colors.black,
-		shadowOffset: { width: 0, height: 4 },
-		shadowOpacity: 0.06,
-		shadowRadius: 2,
+		backgroundColor: COLORS.white,
+		shadowColor: SHADOW_COLOR,
+		shadowOffset: { width: SHADOW_WIDTH, height: 4 },
+		shadowOpacity: SHADOW_OPACITY,
+		shadowRadius: SHADOW_RADIUS,
 		elevation: 8,
 	},
 	content: {
@@ -35,7 +39,7 @@ export default StyleSheet.create({
 	title: {
 		fontSize: LARGE_FONT_SIZE,
 		fontWeight: 700,
-		color: colors.primaryBlueText,
+		color: COLORS.primaryBlueText,
 	},
 	tasksCompletedContainer: {
 		flexDirection: 'row',
@@ -43,12 +47,12 @@ export default StyleSheet.create({
 		gap: 4,
 	},
 	tasksCompleted: {
-		color: colors.primaryGreen,
+		color: COLORS.primaryGreen,
 		fontSize: NORMAL_FONT_SIZE,
 		fontWeight: 700,
 	},
 	taskCount: {
-		color: colors.lightGray5,
+		color: COLORS.lightGray5,
 		fontSize: NORMAL_FONT_SIZE,
 	},
 	userContainer: {
@@ -56,7 +60,7 @@ export default StyleSheet.create({
 		gap: 2,
 	},
 	anonymousUser: {
-		color: colors.lightGray5,
+		color: COLORS.lightGray5,
 		fontSize: SMALL_FONT_SIZE,
 		textAlign: 'center',
 	},

@@ -1,10 +1,9 @@
-import colors from '@/src/utils/colors';
-import { NORMAL_FONT_SIZE } from '@/src/utils/constants';
 import { StyleSheet } from 'react-native';
 import {
 	heightPercentageToDP as hp,
 	widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import { COLORS, NORMAL_FONT_SIZE } from '@/src/utils/sharedStyles';
 
 export default StyleSheet.create({
 	todoContainer: {
@@ -12,7 +11,7 @@ export default StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'flex-start',
 		borderBottomWidth: 1,
-		borderBottomColor: colors.lightGray2,
+		borderBottomColor: COLORS.lightGray2,
 		justifyContent: 'space-between',
 		gap: wp(2),
 	},
@@ -24,7 +23,7 @@ export default StyleSheet.create({
 	},
 	todo: {
 		fontSize: NORMAL_FONT_SIZE,
-		color: colors.black,
+		color: COLORS.black,
 		textDecorationLine: 'none',
 		fontStyle: 'normal',
 		flexShrink: 1,
@@ -33,7 +32,7 @@ export default StyleSheet.create({
 	},
 	todoCompleted: {
 		textDecorationLine: 'line-through',
-		color: colors.lightGray4,
+		color: COLORS.lightGray4,
 		fontStyle: 'italic',
 		fontWeight: 400,
 	},

@@ -1,22 +1,28 @@
-import colors from '@/src/utils/colors';
 import { StyleSheet } from 'react-native';
 import {
 	heightPercentageToDP as hp,
 	widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-const INPUT_HEIGHT = 48;
+import {
+	COLORS,
+	INPUT_HEIGHT,
+	SHADOW_COLOR,
+	SHADOW_OPACITY,
+	SHADOW_RADIUS,
+	SHADOW_WIDTH,
+} from '@/src/utils/sharedStyles';
 
 export default StyleSheet.create({
 	inputContainer: {
 		paddingTop: hp(1),
-		backgroundColor: colors.white,
+		backgroundColor: COLORS.white,
 		paddingHorizontal: wp(4),
 	},
 	inputShadow: {
-		shadowColor: colors.black,
-		shadowOffset: { width: 0, height: -2 },
-		shadowOpacity: 0.06,
-		shadowRadius: 2,
+		shadowColor: SHADOW_COLOR,
+		shadowOffset: { width: SHADOW_WIDTH, height: -2 },
+		shadowOpacity: SHADOW_OPACITY,
+		shadowRadius: SHADOW_RADIUS,
 		elevation: 12,
 	},
 	inputContent: {
@@ -31,7 +37,7 @@ export default StyleSheet.create({
 		borderRadius: 100,
 		marginRight: 8,
 		paddingHorizontal: 20,
-		borderColor: colors.lightGray3,
+		borderColor: COLORS.lightGray3,
 	},
 	addTodo: {
 		borderRadius: 100,
@@ -39,6 +45,6 @@ export default StyleSheet.create({
 		width: INPUT_HEIGHT,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: colors.primaryBlue,
+		backgroundColor: COLORS.primaryBlue,
 	},
 });

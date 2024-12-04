@@ -1,11 +1,10 @@
-import { View, Text } from 'react-native';
-import React from 'react';
-import styles from './styles';
 import { Feather, FontAwesome5 } from '@expo/vector-icons';
-import colors from '@/src/utils/colors';
+import React from 'react';
+import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IS_IOS } from '@/src/utils/constants';
-import { sharedStyles } from '@/src/utils/sharedStyles';
+import styles from './styles';
+import { IS_IOS } from '@/src/utils';
+import { sharedStyles, COLORS } from '@/src/utils/sharedStyles';
 
 type Props = {
 	taskCount: number;
@@ -23,8 +22,8 @@ const Header = ({ taskCount, completedCount }: Props) => {
 				...styles.headerShadow,
 				paddingTop: !IS_IOS ? top : 0,
 				borderBottomColor: areAllTasksCompleted
-					? colors.primaryGreen
-					: colors.primaryBlue,
+					? COLORS.primaryGreen
+					: COLORS.primaryBlue,
 			}}
 		>
 			<View style={[styles.content, sharedStyles.maxWidthContainer]}>
@@ -37,7 +36,7 @@ const Header = ({ taskCount, completedCount }: Props) => {
 								<Feather
 									name={'check-square'}
 									size={14}
-									color={colors.primaryGreen}
+									color={COLORS.primaryGreen}
 									style={{ width: 32 }}
 								/>
 							</View>
@@ -51,7 +50,7 @@ const Header = ({ taskCount, completedCount }: Props) => {
 					<FontAwesome5
 						name="user-circle"
 						size={24}
-						color={colors.lightGray5}
+						color={COLORS.lightGray5}
 					/>
 					<Text style={styles.anonymousUser}>{'Anonymous \n User'}</Text>
 				</View>

@@ -1,12 +1,12 @@
 /* eslint-disable indent */
 /* eslint-disable no-console */
-import React, { useCallback, useEffect, useState } from 'react';
-import { Slot, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AxiosError } from 'axios';
+import { Slot, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { startSession, validateSession } from '@/src/api';
-import { StatusBar } from 'expo-status-bar';
-import { AxiosError } from 'axios';
 
 // Define a type for the error response data
 type ErrorResponseData = {
@@ -20,16 +20,16 @@ const RootLayout = () => {
 	const handleStartSession = useCallback(async () => {
 		const response = await startSession();
 
-		await AsyncStorage.setItem('sessionToken', response.token);
+		await AsyncStorage.setItem('sessionToken', response.data.token);
 
 		setIsSessionInitialized(true);
 	}, []);
 
 	const handleValidateSession = useCallback(async () => {
 		const token = await AsyncStorage.getItem('sessionToken');
-		if (!token) handleStartSession();
 
-		await validateSession();
+		if (!token) await handleStartSession();
+		else await validateSession();
 
 		setIsSessionInitialized(true);
 	}, [handleStartSession]);
@@ -44,6 +44,7 @@ const RootLayout = () => {
 				if (token) await AsyncStorage.removeItem('sessionToken');
 
 				handleStartSession();
+				return;
 			}
 
 			const errorDetails = {

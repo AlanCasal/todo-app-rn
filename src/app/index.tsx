@@ -1,7 +1,7 @@
 import React from 'react';
-import Loader from '@/src/components/Loader';
 import { View } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Loader from '@/src/components/Loader';
 
 const StartPage = () => {
 	return (

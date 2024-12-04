@@ -1,37 +1,30 @@
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '../utils/constants';
-import { Todo } from '../utils/types';
+import axios from 'axios';
+import { API_URL } from '../utils';
+import { ApiResponse, SessionToken, Todo } from '../utils/types';
+
+// Helper function to get session token and set headers
+const getAuthHeaders = async () => {
+	const sessionToken = await AsyncStorage.getItem('sessionToken');
+	return { Authorization: sessionToken };
+};
 
 const api = {
 	get: async (url: string) => {
-		const sessionToken = await AsyncStorage.getItem('sessionToken');
-
-		const response = await axios.get(url, {
-			headers: { Authorization: sessionToken },
-		});
-		return response;
+		const headers = await getAuthHeaders();
+		return axios.get(url, { headers });
 	},
 	post: async (url: string, data?: object) => {
-		const sessionToken = await AsyncStorage.getItem('sessionToken');
-		const response = await axios.post(url, data, {
-			headers: { Authorization: sessionToken },
-		});
-		return response;
+		const headers = await getAuthHeaders();
+		return axios.post(url, data, { headers });
 	},
 	put: async (url: string, data?: object) => {
-		const sessionToken = await AsyncStorage.getItem('sessionToken');
-		const response = await axios.put(url, data, {
-			headers: { Authorization: sessionToken },
-		});
-		return response;
+		const headers = await getAuthHeaders();
+		return axios.put(url, data, { headers });
 	},
 	delete: async (url: string) => {
-		const sessionToken = await AsyncStorage.getItem('sessionToken');
-		const response = await axios.delete(url, {
-			headers: { Authorization: sessionToken },
-		});
-		return response;
+		const headers = await getAuthHeaders();
+		return axios.delete(url, { headers });
 	},
 };
 
@@ -40,14 +33,14 @@ export const validateSession = async () => {
 	return response;
 };
 
-export const startSession = async () => {
+export const startSession = async (): Promise<ApiResponse<SessionToken>> => {
 	const response = await api.post(`${API_URL}/start-session`);
-	return response.data;
+	return response;
 };
 
-export const fetchTodos = async () => {
+export const fetchTodos = async (): Promise<ApiResponse<Todo[]>> => {
 	const response = await api.get(`${API_URL}/todos`);
-	return response?.data;
+	return response;
 };
 
 export const toggleTodo = async (
