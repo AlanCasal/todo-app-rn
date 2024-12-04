@@ -30,7 +30,7 @@ export default StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 100,
 		marginRight: 8,
-		paddingHorizontal: wp(4),
+		paddingHorizontal: 20,
 		borderColor: colors.lightGray3,
 	},
 	addTodo: {
