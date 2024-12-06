@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { API_URL } from '../utils';
-import { ApiResponse, SessionToken, Todo } from '../utils/types';
+import { ApiResponse, SessionToken, Todo, TodoUpdate } from '../utils/types';
 
 // Helper function to get session token and set headers
 const getAuthHeaders = async () => {
@@ -43,11 +43,8 @@ export const fetchTodos = async (): Promise<ApiResponse<Todo[]>> => {
 	return response;
 };
 
-export const toggleTodo = async (
-	id: Todo['id'],
-	completed: Todo['completed']
-) => {
-	const response = await api.put(`${API_URL}/todos/${id}`, { completed });
+export const updateTodo = async (id: Todo['id'], updates: TodoUpdate) => {
+	const response = await api.put(`${API_URL}/todos/${id}`, updates);
 	return response.data;
 };
 

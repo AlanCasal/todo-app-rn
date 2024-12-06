@@ -1,37 +1,54 @@
 import { Feather } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	TouchableOpacity,
-	Platform,
 	KeyboardAvoidingView,
 	TextInput,
 	KeyboardAvoidingViewProps,
 	View,
+	NativeSyntheticEvent,
+	TextInputContentSizeChangeEventData,
 } from 'react-native';
 import styles from './styles';
-import { IS_IOS } from '@/src/utils';
-import { sharedStyles, COLORS } from '@/src/utils/sharedStyles';
+import { IS_IOS, MAX_TODO_LENGTH, sanitizeInput } from '@/src/utils';
+import { sharedStyles, COLORS, INPUT_HEIGHT } from '@/src/utils/sharedStyles';
+import { AddTodoHandler } from '@/src/utils/types';
 
 type Props = {
-	messageBody: string;
-	setMessageBody: (text: string) => void;
-	handleAddTodo: () => void;
+	handleAddTodo: AddTodoHandler;
 };
 
 const KEYBOARD_VERTICAL_OFFSET = 10;
+const MULTILINE_IOS_PADDING_VERTICAL = 15;
 
-const CustomTextInput = ({
-	messageBody,
-	setMessageBody,
-	handleAddTodo,
-}: Props) => {
+const CustomTextInput = ({ handleAddTodo }: Props) => {
+	const [inputValue, setInputValue] = useState('');
+	const [inputHeight, setInputHeight] = useState(INPUT_HEIGHT);
+
 	let behavior: KeyboardAvoidingViewProps['behavior'] = 'height';
 	let keyboardVerticalOffset = 0;
 
-	if (Platform.OS === 'ios') {
+	if (IS_IOS) {
 		behavior = 'padding';
 		keyboardVerticalOffset = KEYBOARD_VERTICAL_OFFSET;
 	}
+
+	const handleContentSizeChange = (
+		event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
+	) => {
+		const { height } = event.nativeEvent.contentSize;
+		const newHeight = Math.max(INPUT_HEIGHT, height); // -> height < INPUT_HEIGHT ? INPUT_HEIGHT : height
+
+		setInputHeight(newHeight);
+	};
+
+	const handleSubmit = async () => {
+		const sanitizedInputValue = sanitizeInput(inputValue);
+		if (!inputValue) return;
+
+		const success = await handleAddTodo(sanitizedInputValue);
+		if (success) setInputValue('');
+	};
 
 	return (
 		<KeyboardAvoidingView
@@ -47,22 +64,35 @@ const CustomTextInput = ({
 		>
 			<View style={[styles.inputContent, sharedStyles.maxWidthContainer]}>
 				<TextInput
-					style={styles.input}
+					style={{
+						...styles.input,
+						...(!IS_IOS
+							? { minHeight: inputHeight }
+							: { paddingVertical: MULTILINE_IOS_PADDING_VERTICAL }),
+					}}
 					// eslint-disable-next-line prettier/prettier
 					placeholder="Write something..."
 					placeholderTextColor={COLORS.lightGray4}
-					onChangeText={setMessageBody}
-					defaultValue={messageBody}
+					onChangeText={setInputValue}
+					value={inputValue}
+					autoCapitalize="none"
+					autoCorrect={false}
+					returnKeyType="done"
+					submitBehavior="submit"
+					onSubmitEditing={handleSubmit}
+					multiline
+					onContentSizeChange={handleContentSizeChange}
+					maxLength={MAX_TODO_LENGTH}
 				/>
 				<TouchableOpacity
 					style={{
 						...styles.addTodo,
-						...(!messageBody.trim().length && {
+						...(!inputValue.trim().length && {
 							backgroundColor: COLORS.lightGray3,
 						}),
 					}}
-					onPress={handleAddTodo}
-					disabled={!messageBody.trim().length}
+					onPress={handleSubmit}
+					disabled={!inputValue.trim().length}
 				>
 					{/* eslint-disable-next-line prettier/prettier */}
 					<Feather name="plus" size={18} color={COLORS.white} />

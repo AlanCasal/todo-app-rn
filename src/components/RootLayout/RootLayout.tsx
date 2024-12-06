@@ -7,11 +7,10 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { startSession, validateSession } from '@/src/api';
+import { ERROR_MESSAGES } from '@/src/utils';
+import { ErrorResponseData } from '@/src/utils/types';
 
 // Define a type for the error response data
-type ErrorResponseData = {
-	message?: string;
-};
 
 const RootLayout = () => {
 	const [isSessionInitialized, setIsSessionInitialized] = useState(false);
@@ -36,8 +35,7 @@ const RootLayout = () => {
 
 	const handleError = useCallback(
 		async (err: AxiosError<ErrorResponseData>) => {
-			const defaultErrorMessage =
-				'Session initialization failed. Please try again.';
+			const defaultErrorMessage = ERROR_MESSAGES.INVALID_SESSION;
 
 			if (err.response?.status === 401) {
 				const token = await AsyncStorage.getItem('sessionToken');

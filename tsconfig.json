@@ -2,8 +2,8 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "jsx": "react-native",
-    "target": "esnext",
-    "lib": ["esnext"],
+    "target": "ES6",
+    "lib": ["ES6"],
     "strict": true,
     "baseUrl": ".",
     "paths": {

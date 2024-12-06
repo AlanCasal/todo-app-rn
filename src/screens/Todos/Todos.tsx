@@ -1,16 +1,21 @@
-import { Alert, SafeAreaView, Keyboard } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Todo } from '@/src/utils/types';
-import { addTodo, deleteTodo, fetchTodos, toggleTodo } from '@/src/api';
-import styles from './styles';
-import Header from '@/src/components/Header';
-import CustomTextInput from '@/src/components/CustomTextInput';
-import TodoList from '@/src/components/TodoList';
 import { AxiosError } from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, SafeAreaView } from 'react-native';
+import styles from './styles';
+import { addTodo, deleteTodo, fetchTodos, updateTodo } from '@/src/api';
+import CustomTextInput from '@/src/components/CustomTextInput';
+import Header from '@/src/components/Header';
+import TodoList from '@/src/components/TodoList';
+import { ERROR_MESSAGES } from '@/src/utils';
+import {
+	AddTodoHandler,
+	DeleteTodoHandler,
+	Todo,
+	UpdateTodoHandler,
+} from '@/src/utils/types';
 
 const TodosList = () => {
 	const [todos, setTodos] = useState<Todo[]>([]);
-	const [messageBody, setMessageBody] = useState('');
 
 	const handleFetchTodos = useCallback(async () => {
 		try {
@@ -26,51 +31,52 @@ const TodosList = () => {
 		}
 	}, []);
 
-	const handleToggleTodo = async (
-		id: Todo['id'],
-		completed: Todo['completed']
-	) => {
+	const handleUpdateTodo: UpdateTodoHandler = async (id, updates) => {
 		try {
-			const newCompletedState = completed === 1 ? 0 : 1;
-			await toggleTodo(id, newCompletedState);
+			await updateTodo(id, updates);
 
 			const updatedTodos = todos.map(todo =>
-				todo.id === id ? { ...todo, completed: newCompletedState } : todo
+				todo.id === id ? { ...todo, ...updates } : todo
 			);
 
 			setTodos(updatedTodos);
 		} catch (err) {
-			let errorMessage = 'An unexpected error occurred';
-			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			let errorMessage = ERROR_MESSAGES.UNEXPECTED_ERROR;
+			if (err instanceof AxiosError && err.response?.data.message)
+				errorMessage = err.response?.data.message;
 			Alert.alert('Error', errorMessage);
 		}
 	};
 
-	const handleAddTodo = async () => {
+	const handleAddTodo: AddTodoHandler = async inputValue => {
 		try {
-			const response = await addTodo(messageBody);
+			const response = await addTodo(inputValue);
 
 			const { id } = response;
 
-			setTodos([...todos, { title: messageBody, completed: 0, id }]);
-			setMessageBody('');
+			setTodos([...todos, { title: inputValue, completed: false, id }]);
+
+			return true;
 		} catch (err) {
-			let errorMessage = 'An unexpected error occurred';
-			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			let errorMessage = ERROR_MESSAGES.UNEXPECTED_ERROR;
+			if (err instanceof AxiosError && err.response?.data.message)
+				errorMessage = err.response?.data.message;
+
 			Alert.alert('Error', errorMessage);
-		} finally {
-			Keyboard.dismiss();
+
+			return false;
 		}
 	};
 
-	const handleDeleteTodo = async (id: number) => {
+	const handleDeleteTodo: DeleteTodoHandler = async id => {
 		try {
 			await deleteTodo(id);
 			const updatedTodos = todos.filter(todo => todo.id !== id);
 			setTodos(updatedTodos);
 		} catch (err) {
-			let errorMessage = 'An unexpected error occurred';
-			if (err instanceof AxiosError) errorMessage = err.response?.data.message;
+			let errorMessage = ERROR_MESSAGES.UNEXPECTED_ERROR;
+			if (err instanceof AxiosError && err.response?.data.message)
+				errorMessage = err.response?.data.message;
 			Alert.alert('Error', errorMessage);
 		}
 	};
@@ -80,7 +86,7 @@ const TodosList = () => {
 	}, [handleFetchTodos]);
 
 	const taskCount = todos.length;
-	const completedCount = todos.filter(todo => todo.completed === 1).length;
+	const completedCount = todos.filter(todo => todo.completed).length;
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -88,15 +94,11 @@ const TodosList = () => {
 
 			<TodoList
 				todos={todos}
-				handleToggleTodo={handleToggleTodo}
+				handleUpdateTodo={handleUpdateTodo}
 				handleDeleteTodo={handleDeleteTodo}
 			/>
 
-			<CustomTextInput
-				messageBody={messageBody}
-				setMessageBody={setMessageBody}
-				handleAddTodo={handleAddTodo}
-			/>
+			<CustomTextInput handleAddTodo={handleAddTodo} />
 		</SafeAreaView>
 	);
 };

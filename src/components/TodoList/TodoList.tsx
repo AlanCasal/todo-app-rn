@@ -8,21 +8,21 @@ import {
 	COLORS,
 	LARGE_FONT_SIZE,
 } from '@/src/utils/sharedStyles';
-import { Todo } from '@/src/utils/types';
+import { DeleteTodoHandler, Todo, UpdateTodoHandler } from '@/src/utils/types';
 
 type Props = {
 	todos: Todo[];
-	handleToggleTodo: (id: Todo['id'], completed: Todo['completed']) => void;
-	handleDeleteTodo: (id: Todo['id']) => void;
+	handleDeleteTodo: DeleteTodoHandler;
+	handleUpdateTodo: UpdateTodoHandler;
 };
 
-const TodoList = ({ todos, handleToggleTodo, handleDeleteTodo }: Props) => {
+const TodoList = ({ todos, handleUpdateTodo, handleDeleteTodo }: Props) => {
 	const renderTodoItem = ({ item, index }: { item: Todo; index: number }) => {
 		const isLastItem = index === todos.length - 1;
 		return (
 			<TodoItem
 				todo={item}
-				handleToggleTodo={handleToggleTodo}
+				handleUpdateTodo={handleUpdateTodo}
 				handleDeleteTodo={handleDeleteTodo}
 				isLastItem={isLastItem}
 			/>

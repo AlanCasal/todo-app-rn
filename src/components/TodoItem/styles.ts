@@ -27,18 +27,19 @@ export default StyleSheet.create({
 		textDecorationLine: 'none',
 		fontStyle: 'normal',
 		flexShrink: 1,
-		marginTop: 1,
 		overflow: 'hidden',
+		width: '100%',
+		flex: 1,
+		paddingTop: 0,
+		paddingBottom: 0,
+	},
+	todoAndroidFix: {
+		bottom: 1,
 	},
 	todoCompleted: {
 		textDecorationLine: 'line-through',
 		color: COLORS.lightGray4,
 		fontStyle: 'italic',
 		fontWeight: 400,
-	},
-	todoActionsContainer: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: 20,
 	},
 });
